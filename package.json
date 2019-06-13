@@ -1,0 +1,55 @@
+{
+  "name": "micro-rbac-frontend",
+  "description": "micro-rbac-frontend",
+  "version": "1.0.0",
+  "author": "Lei Zhang <https://www.lovchun.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PassionZale/micro-rbac-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PassionZale/micro-rbac-frontend/issues"
+  },
+  "homepage": "https://github.com/PassionZale/micro-rbac-frontend#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "dayjs": "^1.8.14",
+    "html5-image-compress": "^0.1.3",
+    "iview": "^3.4.2",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.6",
+    "vuex": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-import": "^1.7.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.6.0",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.4",
+    "html-webpack-plugin": "^3.2.0",
+    "less": "^3.0.1",
+    "less-loader": "^4.1.0",
+    "url-loader": "^1.1.2",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
