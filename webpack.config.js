@@ -100,10 +100,10 @@ module.exports = {
     overlay: true,
     port: envs.WEBPACK_DEV_SERVER_PORT,
     proxy: {
-      [`${envs.BACKEND_DOMAIN}/*`]: {
+      [`${envs.BASE_URL}/*`]: {
         target: envs.WEBPACK_DEV_SERVER_PROXY_TARGET,
         pathRewrite: {
-          [`^${envs.BACKEND_DOMAIN}`]: ""
+          [`^${envs.BASE_URL}`]: ""
         }
       }
     }

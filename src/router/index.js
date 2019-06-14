@@ -26,3 +26,9 @@ export const routes = [
     redirect: { name: "404" }
   }
 ]
+
+export default new VueRouter({
+  mode: "hash",
+  scrollBehavior: () => ( { y: 0 } ),
+  routes
+})

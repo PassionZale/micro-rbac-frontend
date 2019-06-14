@@ -19,10 +19,6 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(response => {
   const code = response.data.code;
 
-  if (JWT_ERRORS_CODE.indexOf(code) > -1) {
-    return Promise.reject({ action: "custom", msg: "登录过期,请重新登录!" })
-  }
-
   if (code !== 200) {
     return Promise.reject(response.data);
   }
@@ -30,7 +26,9 @@ http.interceptors.response.use(response => {
   return response.data;
 }, error => {
   if(error.code === "ECONNABORTED") {
-    return Promise.reject({ action: "custom", msg: "请求超时" })
+    return Promise.reject({ action: "custom", message: "请求超时" })
+  } else if(error.response.data.code && JWT_ERRORS_CODE.indexOf(error.response.data.code) > -1) {
+    return Promise.reject({ action: "custom", message: "登录异常,请重新登录!" })
   } else {
     return Promise.reject(error.response.data);
   }
