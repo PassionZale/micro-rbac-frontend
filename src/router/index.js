@@ -11,7 +11,8 @@ export const routes = [
     component: () => import("@/components/container"),
     hidden: true,
     children: [
-      { path: "welcome", name: "welcome", meta: { title: "欢迎" }, component: () => import("@/views/example") }
+      { path: "welcome", name: "welcome", meta: { title: "欢迎" }, component: () => import("@/views/example") },
+      { path: "profile", name: "profile", meta: { title: "个人中心" }, component: () => import("@/views/example") },
     ]
   },
 

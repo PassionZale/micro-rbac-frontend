@@ -17,6 +17,7 @@ export default {
   margin-top: 65px;
   padding: 10px;
   .main {
+    padding: 10px;
     background-color: #ffffff;
     min-height: 300px;
   }

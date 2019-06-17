@@ -78,7 +78,7 @@ export default {
           POST_LOGIN(this.form.model)
             .then(response => {
               Auth.setToken(response.data);
-              // this.$router.push("/");
+              this.$router.push("/");
             })
             .catch(error => {
               this.$Message.error(error.message);

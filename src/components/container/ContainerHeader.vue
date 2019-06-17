@@ -1,24 +1,39 @@
 <template>
   <div class="ContainerHeader">
-    <Dropdown trigger="click" style="float: right;">
-      <a href="javascript:void(0)">
-        click 触发
-        <Icon type="ios-arrow-down"></Icon>
-      </a>
-      <DropdownMenu slot="list">
-        <DropdownItem>驴打滚</DropdownItem>
-        <DropdownItem>炸酱面</DropdownItem>
-        <DropdownItem>豆汁儿</DropdownItem>
-        <DropdownItem>冰糖葫芦</DropdownItem>
-        <DropdownItem>北京烤鸭</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+    <img src="/static/images/lovchun.jpg">
+
+    <div style="float:right;height: 100%;line-height: 65px;margin-right: 20px;">
+      <Dropdown trigger="click" style="float: right;">
+        <Button type="primary">
+          {{ user.username }}
+          <Icon type="ios-arrow-down"></Icon>
+        </Button>
+        <DropdownMenu slot="list">
+          <DropdownItem @click.native="profile()">个人中心</DropdownItem>
+          <DropdownItem @click.native="LogOut()">注销</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
-  name: "ContainerHeader"
+  name: "ContainerHeader",
+
+  computed: {
+    ...mapGetters(["user"])
+  },
+
+  methods: {
+    ...mapActions(["LogOut"]),
+
+    profile() {
+      this.$router.push({ name: "profile" });
+    }
+  }
 };
 </script>
 
