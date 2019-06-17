@@ -1,6 +1,12 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+import system from "./system"
+import brand from "./brand"
+import category from "./category"
+import property from "./property"
+import product from "./product"
+
 Vue.use(VueRouter)
 
 export const routes = [
@@ -32,6 +38,16 @@ export const routes = [
     hidden: true,
     component: () => import("@/views/errors/404")
   },
+
+  system,
+
+  brand,
+
+  category,
+
+  property,
+
+  product,
 
   {
     path: "*",

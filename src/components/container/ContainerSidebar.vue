@@ -1,28 +1,36 @@
 <template>
   <div class="ContainerSidebar">
-    <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']">
-      <Submenu name="1">
+    <Menu theme="dark" width="auto">
+      <MenuItem name="welcome" to="/welcome">
+        <Icon type="md-document"/>欢迎
+      </MenuItem>
+
+      <Submenu name="system">
         <template slot="title">
-          <Icon type="ios-navigate"></Icon>Item 1
+          <Icon type="md-people"/>
+          系统管理
         </template>
-        <MenuItem name="1-1">Option 1</MenuItem>
-        <MenuItem name="1-2">Option 2</MenuItem>
-        <MenuItem name="1-3">Option 3</MenuItem>
+        <MenuItem name="permission" to="/system/permission">权限设置</MenuItem>
+        <MenuItem name="role" to="/system/role">角色设置</MenuItem>
+        <MenuItem name="user" to="/system/user">用户设置</MenuItem>
       </Submenu>
-      <Submenu name="2">
-        <template slot="title">
-          <Icon type="ios-keypad"></Icon>Item 2
-        </template>
-        <MenuItem name="2-1">Option 1</MenuItem>
-        <MenuItem name="2-2">Option 2</MenuItem>
-      </Submenu>
-      <Submenu name="3">
-        <template slot="title">
-          <Icon type="ios-analytics"></Icon>Item 3
-        </template>
-        <MenuItem name="3-1">Option 1</MenuItem>
-        <MenuItem name="3-2">Option 2</MenuItem>
-      </Submenu>
+
+      <MenuItem name="brand" to="/brand">
+        <Icon type="md-briefcase" />
+        品牌管理
+      </MenuItem>
+      <MenuItem name="category" to="/category">
+        <Icon type="ios-paper"/>
+        分类管理
+      </MenuItem>
+      <MenuItem name="property" to="/property">
+        <Icon type="ios-paper"/>
+        属性管理
+      </MenuItem>
+      <MenuItem name="product" to="/product">
+        <Icon type="ios-paper"/>
+        商品管理
+      </MenuItem>
     </Menu>
   </div>
 </template>
@@ -42,7 +50,6 @@ export default {
   top: 65px;
   left: 0;
   background-color: #515a6e;
-  font-size: 14px;
   user-select: none;
 }
 </style>
