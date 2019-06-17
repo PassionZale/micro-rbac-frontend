@@ -5,6 +5,18 @@ Vue.use(VueRouter)
 
 export const routes = [
   {
+    path: "/",
+    name: "root",
+    redirect: { name: "welcome" },
+    component: () => import("@/components/container"),
+    hidden: true,
+    children: [
+      { path: "welcome", name: "welcome", meta: { title: "欢迎" }, component: () => import("@/views/example") }
+    ]
+  },
+
+
+  {
     path: "/login",
     name: "login",
     meta: { title: "登录" },
@@ -29,6 +41,6 @@ export const routes = [
 
 export default new VueRouter({
   mode: "hash",
-  scrollBehavior: () => ( { y: 0 } ),
+  scrollBehavior: () => ({ y: 0 }),
   routes
 })
