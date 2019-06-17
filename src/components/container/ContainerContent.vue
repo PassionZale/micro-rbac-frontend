@@ -18,7 +18,7 @@ export default {
   padding: 10px;
   .main {
     background-color: #ffffff;
-    min-height: 500px;
+    min-height: 300px;
   }
 }
 </style>
