@@ -2,6 +2,7 @@ import App from "./App"
 import Auth from "@/utils/auth"
 import Bus from "@/utils/bus"
 import Vue from "vue"
+import * as filters from "./filters"
 import iView from "iview"
 import router from "./router"
 import store from "@/vuex/store";
@@ -9,6 +10,10 @@ import store from "@/vuex/store";
 Vue.use(Bus)
 Vue.use(iView)
 Vue.use(store)
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.config.devtools = true
 

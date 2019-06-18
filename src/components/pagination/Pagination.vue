@@ -12,7 +12,7 @@
       :current.sync="pagination.page"
       :total="pagination.total"
       :page-size="pagination.pageSize"
-      @on-change="page-change()"
+      @on-change="pageChange()"
       show-elevator
       show-total
     ></Page>
@@ -40,7 +40,7 @@ export default {
       this.pagination.total = total;
     },
 
-    query() {
+    getQuery() {
       const { page, pageSize } = this.pagination;
       return { page, pageSize };
     },

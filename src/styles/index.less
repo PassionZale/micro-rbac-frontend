@@ -11,14 +11,22 @@
 @primary-color: #2d8cf0;
 @default-background-color: #f9f9f9;
 @left-container-width: 250px;
-@ivew-input-width: 200px;
+@iview-input-width: 20em;
 
 html,
 body {
-  height: 100%;
   background-color: @default-background-color;
   padding: 0;
   margin: 0;
+}
+
+.default-width {
+  width: @iview-input-width;
+}
+
+.ivu-input,
+.ivu-select {
+  width: @iview-input-width;
 }
 
 .LayoutList {

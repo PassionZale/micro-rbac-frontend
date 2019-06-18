@@ -48,7 +48,67 @@ export default {
       table: {
         loading: false,
         data: [],
-        columns: []
+        columns: [
+          {
+            type: "index",
+            align: "center",
+            width: 60
+          },
+          {
+            key: "name",
+            title: "权限名称"
+          },
+          {
+            key: "code",
+            title: "权限编码"
+          },
+          {
+            key: "route",
+            title: "权限路由"
+          },
+          {
+            key: "created_at",
+            title: "创建时间",
+            render: (h, params) => {
+              return h("div", this.$options.filters.unixFormater(params.row.created_at));
+            }
+          },
+          {
+            key: "updated_at",
+            title: "更新时间",
+            render: (h, params) => {
+              return h("div", this.$options.filters.unixFormater(params.row.updated_at));
+            }
+          },
+          {
+            title: "操作",
+            render: (h, params) => {
+              const editBtn = h("Button", {
+                props: {
+                  type: "text"
+                },
+                on: {
+                  click: () => {
+                    this.$router.push({ name: "permission-detail", query: { id: params.row.id }})
+                  }
+                }
+              }, "编辑");
+
+              const removeBtn = h("Button", {
+                props: {
+                  type: "text"
+                },
+                on: {
+                  click: () => {
+
+                  }
+                }
+              }, "删除");
+
+              return h("div", [editBtn, removeBtn]);
+            }
+          }
+        ]
       }
     };
   },
@@ -63,7 +123,7 @@ export default {
 
       reload && this.$refs["page"].resetPage();
 
-      const params = Object.assign({}, this.form, this.$refs["page"].query());
+      const params = Object.assign({}, this.form, this.$refs["page"].getQuery());
 
       GET_PERMISSIONS(params)
         .then(response => {
