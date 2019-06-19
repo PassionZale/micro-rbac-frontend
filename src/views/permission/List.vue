@@ -32,7 +32,7 @@
 <script>
 import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
-import { GET_PERMISSIONS, PUT_PERMISSION } from "@/api/permission";
+import { GET_PERMISSIONS, DELETE_PERMISSION } from "@/api/permission";
 
 export default {
   components: { LayoutList, Pagination },
@@ -98,14 +98,27 @@ export default {
                 props: {
                   type: "text"
                 },
-                on: {
-                  click: () => {
-
-                  }
-                }
               }, "删除");
 
-              return h("div", [editBtn, removeBtn]);
+              const removePoptip = h("Poptip", {
+                props: {
+                  transfer: true,
+                  confirm: true,
+                  title: "确定删除此条数据?"
+                },
+                on: {
+                  "on-ok": () => {
+                    DELETE_PERMISSION(params.row.id).then(() => {
+                      this.loadData();
+                    }).catch(error => {
+                      this.$Message.error(error.message);
+                    })
+                  }
+                }
+              }, [removeBtn]);
+
+
+              return h("div", [editBtn, removePoptip]);
             }
           }
         ]
