@@ -8,6 +8,13 @@ export const GET_PERMISSIONS = params => {
   })
 }
 
+export const GET_PERMISSIONS_FORMAT = (format = "checkbox") => {
+  return http({
+    method: "get",
+    url: `/permissions/format/${format}`
+  })
+}
+
 export const GET_PERMISSION = id => {
   return http({
     method: "get",
