@@ -5,9 +5,9 @@ const router = {
   redirect: { name: "user-list" },
   component: () => import("@/components/container/ContainerBase"),
   children: [
-    { path: "/", name: "user-list", meta: { title: "用户列表" }, component: () => import("@/views/example") },
-    { path: "detail", name: "user-detail", meta: { title: "用户详情" }, component: () => import("@/views/example") },
-    { path: "create", name: "user-update", meta: { title: "用户新增" }, component: () => import("@/views/example") },
+    { path: "/", name: "user-list", meta: { title: "用户列表" }, component: () => import("@/views/user/List") },
+    { path: "detail", name: "user-detail", meta: { title: "用户详情" }, component: () => import("@/views/user/CreateOrUpdate") },
+    { path: "create", name: "user-create", meta: { title: "用户新增" }, component: () => import("@/views/user/CreateOrUpdate") },
   ]
 }
 

@@ -8,6 +8,13 @@ export const GET_ROLES = params => {
   })
 }
 
+export const GET_ROLES_FORMAT = (format = "checkbox") => {
+  return http({
+    method: "get",
+    url: `/roles/format/${format}`
+  })
+}
+
 export const GET_ROLE = id => {
   return http({
     method: "get",

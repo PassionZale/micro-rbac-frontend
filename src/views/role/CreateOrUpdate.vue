@@ -26,7 +26,7 @@
 import { GET_ROLE, POST_ROLE, PUT_ROLE } from "@/api/role";
 import PermissionCheckboxGroup from "@/components/permission";
 
-const PERMISSION = Object.freeze({
+const ROLE = Object.freeze({
   name: "",
   code: "",
   permissionIds: []
@@ -42,7 +42,7 @@ export default {
       id: this.$route.query.id || "",
 
       form: {
-        model: Object.assign({}, PERMISSION),
+        model: Object.assign({}, ROLE),
         rules: {
           name: [
             { required: true, message: "请填写权限名称", trigger: "blur" }
