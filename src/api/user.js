@@ -31,6 +31,14 @@ export const PUT_USER = (id, data) => {
   })
 }
 
+export const PUT_USER_PASSWORD = (id, data) => {
+  return http({
+    method: "put",
+    url: `/users/${id}/password`,
+    data
+  })
+}
+
 export const DELETE_USER = id => {
   return http({
     method: "delete",

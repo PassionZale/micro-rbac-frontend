@@ -7,7 +7,7 @@ const router = {
   children: [
     { path: "/", name: "user-list", meta: { title: "用户列表" }, component: () => import("@/views/user/List") },
     { path: "detail", name: "user-detail", meta: { title: "用户详情" }, component: () => import("@/views/user/CreateOrUpdate") },
-    { path: "create", name: "user-create", meta: { title: "用户新增" }, component: () => import("@/views/user/CreateOrUpdate") },
+    { path: "create", name: "user-create", meta: { title: "用户新增" }, props: { disPassword: true }, component: () => import("@/views/user/CreateOrUpdate") },
   ]
 }
 

@@ -9,10 +9,10 @@
     <FormItem label="用户名:" prop="username">
       <Input type="text" v-model="form.model.username"/>
     </FormItem>
-    <FormItem label="密码:" prop="password">
+    <FormItem label="密码:" prop="password" v-if="disPassword">
       <Input type="password" v-model="form.model.password"/>
     </FormItem>
-    <FormItem label="确认密码" prop="passwordConfirm">
+    <FormItem label="确认密码" prop="passwordConfirm" v-if="disPassword">
       <Input type="password" v-model="form.model.passwordConfirm"/>
     </FormItem>
     <FormItem label="状态">
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { GET_USER, POST_USER, PUT_USE } from "@/api/user";
+import { GET_USER, POST_USER, PUT_USER } from "@/api/user";
 import RoleCheckboxGroup from "@/components/role";
 
 const USER = Object.freeze({
@@ -52,6 +52,10 @@ const USER = Object.freeze({
 
 export default {
   components: { RoleCheckboxGroup },
+
+  props: {
+    disPassword: [Boolean]
+  },
 
   data() {
     const PASSWORD_VALIDATOR = (rule, value, callback) => {
@@ -79,9 +83,11 @@ export default {
         rules: {
           username: [
             { required: true, message: "请填写用户名", trigger: "blur" },
+            { pattern: /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/, message: "用户名必须以字母开头，长度在5~16之间，只能包含字母、数字和下划线", trigger: "blur" }
           ],
           password: [
             { required: true, message: "请填写密码", trigger: "blur" },
+            { pattern: /^[a-zA-Z]\w{5,17}$/, message: "密码必须以字母开头，长度在6~18之间，只能包含字母、数字和下划线", trigger: "blur"},
             { validator: PASSWORD_VALIDATOR, trigger: "blur" }
           ],
           passwordConfirm: [
@@ -101,7 +107,8 @@ export default {
     loadData() {
       GET_USER(this.id)
         .then(response => {
-          this.form.model = Object.assign({}, this.form.model, response.data);
+          const { username, is_active, is_superuser, roleIds } = response.data
+          this.form.model = Object.assign({}, this.form.model, { username, is_active, is_superuser, roleIds });
         })
         .catch(error => {
           this.$Message.error(error.message);

@@ -20,22 +20,29 @@
     <template slot="page">
       <pagination ref="page" @on-page-size-change="loadData(true)" @on-page-change="loadData()"></pagination>
     </template>
+
+    <password-update-modal v-model="passwordUpdateModalVisible" :user-id="selectedUserId"></password-update-modal>
   </layout-list>
 </template>
 
 <script>
 import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
+import PasswordUpdateModal from "./components/PasswordUpdateModal";
 import { GET_USERS, DELETE_USER } from "@/api/user";
 
 export default {
-  components: { LayoutList, Pagination },
+  components: { LayoutList, Pagination, PasswordUpdateModal },
 
   data() {
     return {
       form: {
         username: ""
       },
+
+      passwordUpdateModalVisible: false,
+
+      selectedUserId: "",
 
       table: {
         loading: false,
@@ -108,6 +115,22 @@ export default {
                 "编辑"
               );
 
+              const pwdBtn = h(
+                "Button",
+                {
+                  props: {
+                    type: "text"
+                  },
+                  on: {
+                    click: () => {
+                      this.selectedUserId = params.row.id;
+                      this.passwordUpdateModalVisible = !this.passwordUpdateModalVisible;
+                    }
+                  }
+                },
+                "编辑密码"
+              );
+
               const removeBtn = h(
                 "Button",
                 {
@@ -141,7 +164,7 @@ export default {
                 [removeBtn]
               );
 
-              return h("div", [editBtn, removePoptip]);
+              return h("div", [editBtn, pwdBtn, removePoptip]);
             }
           }
         ]
