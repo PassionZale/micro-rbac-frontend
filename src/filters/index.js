@@ -1,9 +1,10 @@
 import dayjs from "dayjs"
 
-export const unixFormater = (unixNumber, full = true) => {
-  const date = dayjs(unixNumber)
+export const unixFormater = (timestamp, full = true) => {
+  const unix = parseInt(timestamp)
+  const date = dayjs(unix)
   if (date.isValid()) {
-    return full ? date.format("YYYY-MM-DD HH:mm:ss") : date.format("YYYY-MM-DD");
+    return full ? dayjs.unix(unix).format("YYYY-MM-DD HH:mm:ss") : dayjs.unix(unix).format("YYYY-MM-DD");
   } else {
     return "";
   }
