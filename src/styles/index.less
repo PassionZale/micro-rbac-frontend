@@ -69,6 +69,7 @@ body {
 
 .LayoutTree {
   min-height: 500px;
+  position: relative;
 
   &::after {
     display: block;
@@ -91,15 +92,15 @@ body {
 
   .distance-wrapper {
     position: absolute;
-    left: @left-container-width + @distance-default + @distance-small;
-    top: 0;
-    bottom: 0;
+    left: @left-container-width;
+    top: -@distance-small;
+    bottom: -@distance-small;
     width: @distance-small;
     background: @default-background-color;
   }
 
   .right-container {
-    margin-left: @left-container-width + @distance-default + @distance-small;
+    margin-left: @left-container-width + @distance-small + @distance-small;
 
     &::after {
       display: block;
