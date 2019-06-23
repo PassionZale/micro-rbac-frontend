@@ -1,8 +1,8 @@
 <template>
   <layout-tree>
     <template slot="tree-tool">
-      <Button type="primary">新建</Button>
-      <Button type="primary" :disabled="$disTreeActionBtn">编辑</Button>
+      <Button type="primary" @click="createBtn('tree')">新建</Button>
+      <Button type="primary" :disabled="$disTreeActionBtn" @click="updateBtn('tree')">编辑</Button>
       <Button type="primary" :disabled="$disTreeActionBtn">删除</Button>
     </template>
 
@@ -30,20 +30,27 @@
     <template slot="page">
       <pagination ref="page" @on-page-size-change="loadData(true)" @on-page-change="loadData()"></pagination>
     </template>
+
+    <property-create-or-update-modal v-model="treePropertyModal" :property-id="treeSelectPropertyId"></property-create-or-update-modal>
   </layout-tree>
 </template>
 
 <script>
 import { LayoutTree } from "@/components/layout";
 import Pagination from "@/components/pagination";
+import PropertyCreateOrUpdateModal from "./components/PropertyCreateOrUpdateModal";
 import { GET_PROPERTIES_FORMAT, DELETE_PROPERTY } from "@/api/property";
 
 export default {
-  components: { LayoutTree, Pagination },
+  components: { LayoutTree, Pagination, PropertyCreateOrUpdateModal },
 
   data() {
     return {
+      treePropertyModal: false,
       treeSelectPropertyId: "",
+
+      tablePropertyModal: false,
+      tableSelectPropertyValueId: "",
 
       form: {
         name: ""
@@ -82,6 +89,11 @@ export default {
 
     treeSelectChange(selections, selection) {
       this.treeSelectPropertyId = selections.length ? selection.id : "";
+    },
+
+    createBtn() {
+      this.treeSelectPropertyId = "";
+      this.treePropertyModal = !this.treePropertyModal;
     },
 
     loadData(reload = false) {}
