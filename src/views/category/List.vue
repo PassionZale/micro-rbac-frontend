@@ -2,17 +2,17 @@
   <layout-tree>
     <template slot="tree-tool">
       <Button type="primary" @click="createBtn()">新建</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="updateBtn('tree')">编辑</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="removeBtn('click')">删除</Button>
+      <Button type="primary" :disabled="$disActionBtn" @click="updateBtn()">编辑</Button>
+      <Button type="primary" :disabled="$disActionBtn" @click="removeBtn()">删除</Button>
     </template>
 
     <template slot="tree">
-      <Tree :data="properties" @on-select-change="treeSelectChange"></Tree>
+      <Tree :data="categories" @on-select-change="treeSelectChange"></Tree>
     </template>
 
     <template slot="form">
       <Form :label-width="80" inline @submit.native.prevent>
-        <FormItem label="属性名称:">
+        <FormItem label="分类名称:">
           <Input type="text" v-model="form.name" @on-enter="loadData(true)"/>
         </FormItem>
         <Button type="primary" @click="loadData(true)">查询</Button>
@@ -20,7 +20,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="createBtn('table')" :disabled="$disActionBtn">新建属性</Button>
+      <Button type="primary" @click="$router.push({ name: 'category-create' })">新建子分类</Button>
     </template>
 
     <template slot="table">
@@ -31,51 +31,34 @@
       <pagination ref="page" @on-page-size-change="loadData(true)" @on-page-change="loadData()"></pagination>
     </template>
 
-    <property-create-or-update-modal
-      v-model="treePropertyModal"
-      :property-id="treeSelectPropertyId"
+    <create-or-update-modal
+      v-model="categoryModal"
+      :category-id="categoryId"
       @on-success="loadTree()"
-    ></property-create-or-update-modal>
-
-    <property-value-create-or-update-modal
-      v-model="tablePropertyModal"
-      :property-id="treeSelectPropertyId"
-      :property-value-id="tableSelectPropertyValueId"
-      @on-success="loadData()"
-    ></property-value-create-or-update-modal>
+    ></create-or-update-modal>
   </layout-tree>
 </template>
 
 <script>
 import { LayoutTree } from "@/components/layout";
 import Pagination from "@/components/pagination";
-import PropertyCreateOrUpdateModal from "./components/PropertyCreateOrUpdateModal";
-import PropertyValueCreateOrUpdateModal from "./components/PropertyValueCreateOrupdateModal";
-import { GET_PROPERTIES_FORMAT, DELETE_PROPERTY } from "@/api/property";
-import {
-  GET_PROPERTY_VALUES,
-  DELETE_PROPERTY_VALUE
-} from "@/api/property-value";
+import CreateOrUpdateModal from "./components/CreateOrUpdateModal";
+import { GET_CATEGORIES_FORMAT, DELETE_CATEGORY, GET_CATEGORIES } from "@/api/category";
 
 export default {
-  components: {
-    LayoutTree,
-    Pagination,
-    PropertyCreateOrUpdateModal,
-    PropertyValueCreateOrUpdateModal
-  },
+  components: { LayoutTree, Pagination, CreateOrUpdateModal },
 
   data() {
     return {
-      treePropertyModal: false,
-      treeSelectPropertyId: "",
+      categoryModal: false,
 
-      tablePropertyModal: false,
-      tableSelectPropertyValueId: "",
+      categoryId: "",
 
       form: {
         name: ""
       },
+
+      categories: [{ id: "", title: "全部父分类", expand: true, children: [] }],
 
       table: {
         loading: false,
@@ -87,12 +70,12 @@ export default {
             width: 60
           },
           {
-            key: "property_name",
-            title: "从属属性组"
+            key: "pname",
+            title: "父分类"
           },
           {
             key: "name",
-            title: "属性名称"
+            title: "分类名称"
           },
           {
             key: "created_at",
@@ -125,8 +108,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.tableSelectPropertyValueId = params.row.id;
-                      this.tablePropertyModal = !this.tablePropertyModal;
+                      this.$router.push({ name: "category-detail", query: { id: params.row.id } })
                     }
                   }
                 },
@@ -153,7 +135,7 @@ export default {
                   },
                   on: {
                     "on-ok": () => {
-                      DELETE_PROPERTY_VALUE(params.row.id)
+                      DELETE_CATEGORY(params.row.id)
                         .then(() => {
                           this.loadData();
                         })
@@ -169,16 +151,16 @@ export default {
               return h("div", [editBtn, removePoptip]);
             }
           }
-        ]
-      },
 
-      properties: [{ id: "", title: "全部属性组", expand: true, children: [] }]
+        ]
+      }
+
     };
   },
 
   computed: {
     $disActionBtn() {
-      return this.treeSelectPropertyId === "";
+      return this.categoryId === "";
     }
   },
 
@@ -192,10 +174,10 @@ export default {
 
   methods: {
     loadTree() {
-      this.treeSelectPropertyId = "";
-      GET_PROPERTIES_FORMAT()
+      this.categoryId = "";
+      GET_CATEGORIES_FORMAT()
         .then(response => {
-          this.properties[0]["children"] = response.data;
+          this.categories[0]["children"] = response.data;
         })
         .catch(error => {
           this.$Message.error(error.message);
@@ -203,24 +185,19 @@ export default {
     },
 
     treeSelectChange(selections, selection) {
-      this.treeSelectPropertyId = selections.length ? selection.id : "";
+      this.categoryId = selections.length ? selection.id : "";
       this.$nextTick(() => {
         this.loadData(true);
       })
     },
 
-    createBtn(type = "tree") {
-      if (type === "tree") {
-        this.treeSelectPropertyId = "";
-        this.treePropertyModal = !this.treePropertyModal;
-      } else {
-        this.tableSelectPropertyValueId = "";
-        this.tablePropertyModal = !this.tablePropertyModal;
-      }
+    createBtn() {
+      this.categoryId = "";
+      this.categoryModal = !this.categoryModal;
     },
 
     updateBtn() {
-      this.treePropertyModal = !this.treePropertyModal;
+      this.categoryModal = !this.categoryModal;
     },
 
     removeBtn() {
@@ -228,7 +205,7 @@ export default {
         title: "您确认删除这条内容吗？",
         loading: true,
         onOk: () => {
-          DELETE_PROPERTY(this.treeSelectPropertyId)
+          DELETE_CATEGORY(this.categoryId)
             .then(response => {
               this.$Message.success("操作成功");
               this.$Modal.remove();
@@ -242,6 +219,7 @@ export default {
       });
     },
 
+
     loadData(reload = false) {
       this.table.loading = true;
 
@@ -250,11 +228,11 @@ export default {
       const params = Object.assign(
         {},
         this.form,
-        { property_id: this.treeSelectPropertyId },
+        { pid: this.categoryId },
         this.$refs["page"].getQuery()
       );
 
-      GET_PROPERTY_VALUES(params)
+      GET_CATEGORIES(params)
         .then(response => {
           this.table.data = response.data.list;
           this.$refs["page"].initTotal(response.data.total);
@@ -266,6 +244,7 @@ export default {
           this.$Message.error(error.message);
           this.table.loading = false;
         });
+
     }
   }
 };
