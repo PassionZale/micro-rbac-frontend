@@ -44,3 +44,11 @@ export const DELETE_PROPERTY = id => {
     url: `/properties/${id}`
   })
 }
+
+export const GET_PROPERTY_VALUES = params => {
+  return http({
+    method: "get",
+    url: `/property/values`,
+    params
+  })
+}
