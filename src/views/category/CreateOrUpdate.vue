@@ -51,6 +51,8 @@ export default {
 
       id: this.$route.query.id || "",
 
+      parentId: this.$route.query.parentId || "",
+
       form: {
         model: Object.assign({}, CATEGORY_CHILD),
         rules: {
@@ -63,6 +65,8 @@ export default {
   },
 
   created() {
+    this.parentId && (this.form.model.pid = this.parentId);
+
     this.id && this.loadData();
   },
 

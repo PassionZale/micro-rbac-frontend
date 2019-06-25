@@ -1,8 +1,8 @@
 <template>
   <Modal v-model="visible" :title="$title" @on-visible-change="visibleChange">
-    <Form ref="property-create-or-update-form" :model="form.model" :rules="form.rules">
+    <Form ref="property-create-or-update-form" :model="form.model" :rules="form.rules" @submit.native.prevent>
       <FormItem label="属性名称" prop="name">
-        <Input type="text" v-model="form.model.name"/>
+        <Input type="text" v-model="form.model.name" @on-enter="confirm()"/>
       </FormItem>
     </Form>
 

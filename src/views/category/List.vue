@@ -12,7 +12,7 @@
 
     <template slot="form">
       <Form :label-width="80" inline @submit.native.prevent>
-        <FormItem label="分类名称:">
+        <FormItem label="子分类名称:">
           <Input type="text" v-model="form.name" @on-enter="loadData(true)"/>
         </FormItem>
         <Button type="primary" @click="loadData(true)">查询</Button>
@@ -20,7 +20,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="$router.push({ name: 'category-create' })">新建子分类</Button>
+      <Button type="primary" @click="createChildBtn()">新建子分类</Button>
     </template>
 
     <template slot="table">
@@ -194,6 +194,11 @@ export default {
     createBtn() {
       this.categoryId = "";
       this.categoryModal = !this.categoryModal;
+    },
+
+    createChildBtn() {
+      const router = this.categoryId ? { name: "category-create", query: { parentId: this.categoryId} } : { name: "category-create"};
+      this.$router.push(router);
     },
 
     updateBtn() {

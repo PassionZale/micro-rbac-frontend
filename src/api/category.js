@@ -8,6 +8,13 @@ export const GET_CATEGORIES = params => {
   })
 }
 
+export const GET_CATEGORIES_PROPERTIES = id => {
+  return http({
+    method: "get",
+    url: `/categories/${id}/properties`
+  })
+}
+
 export const GET_CATEGORIES_FORMAT = (format = "tree") => {
   return http({
     method: "get",

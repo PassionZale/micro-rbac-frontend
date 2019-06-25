@@ -1,6 +1,9 @@
 <template>
   <div class="ContainerHeader">
-    <img src="/static/images/lovchun.jpg">
+    <!-- <img src="/static/images/lovchun.jpg"> -->
+    <div style="display: inline-block; width: 220px;height: 100%; background-color: #515a6e;">
+      <img style="display: block; margin:10px auto auto;" src="/static/images/logo.png">
+    </div>
 
     <div style="float:right;height: 100%;line-height: 65px;margin-right: 20px;">
       <Dropdown trigger="click" style="float: right;">

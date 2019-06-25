@@ -1,5 +1,5 @@
 <template>
-  <Cascader v-model="selections" :data="categories" @on-change="change"></Cascader>
+  <Cascader style="width: 16em" v-model="selections" :data="categories" @on-change="change"></Cascader>
 </template>
 
 <script>
