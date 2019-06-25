@@ -6,10 +6,10 @@
           <Input type="text" v-model="form.name"/>
         </FormItem>
         <FormItem label="商品品牌">
-          <Input type="text" v-model="form.brandId"/>
+          <brand-select v-model="form.brandId"></brand-select>
         </FormItem>
         <FormItem label="商品分类">
-          <Input type="text" v-model="form.categoryId"/>
+          <category-cascader v-model="form.categoryId"></category-cascader>
         </FormItem>
         <Button type="primary" @click="loadData(true)">查询</Button>
       </Form>
@@ -32,17 +32,19 @@
 <script>
 import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
+import BrandSelect from "@/components/brand";
+import { CategoryCascader } from "@/components/category";
 import { GET_PRODUCTS, DELETE_PRODUCT } from "@/api/product";
 
 export default {
-  components: { LayoutList, Pagination },
+  components: { LayoutList, Pagination, BrandSelect, CategoryCascader },
 
   data() {
     return {
       form: {
         name: "",
         brandId: "",
-        categoryId: ""
+        categoryId: []
       },
 
       table: {
@@ -56,15 +58,15 @@ export default {
           },
           {
             key: "name",
-            title: "权限名称"
+            title: "商品名称"
           },
           {
-            key: "code",
-            title: "权限编码"
+            key: "brand_name",
+            title: "品牌名称"
           },
           {
-            key: "route",
-            title: "权限路由"
+            key: "category_name",
+            title: "分类名称"
           },
           {
             key: "created_at",
@@ -98,7 +100,7 @@ export default {
                   on: {
                     click: () => {
                       this.$router.push({
-                        name: "permission-detail",
+                        name: "product-detail",
                         query: { id: params.row.id }
                       });
                     }
@@ -148,6 +150,16 @@ export default {
     };
   },
 
+  computed: {
+    $categoryId() {
+      if(this.form.categoryId.length) {
+        return this.form.categoryId[1];
+      } else {
+        return ""
+      }
+    }
+  },
+
   mounted() {
     this.loadData(true);
   },
@@ -161,6 +173,7 @@ export default {
       const params = Object.assign(
         {},
         this.form,
+        { categoryId: this.$categoryId },
         this.$refs["page"].getQuery()
       );
 
@@ -173,8 +186,8 @@ export default {
           });
         })
         .catch(error => {
-          this.$Message.error(error.message);
           this.table.loading = false;
+          this.$Message.error(error.message);
         });
     }
   }

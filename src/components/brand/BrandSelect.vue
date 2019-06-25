@@ -1,6 +1,6 @@
 <template>
   <Select v-model="brandId">
-    <Option v-for="item in brands" :key="item.id" :label="item.id">{{ item.name }}</Option>
+    <Option v-for="item in brands" :key="item.id" :value="item.id">{{ item.name }}</Option>
   </Select>
 </template>
 
