@@ -2,7 +2,7 @@
   <div>
     <Button type="primary" size="small" @click="generateSkuTable()">确认生成</Button>
     <br>
-    <Table :loading="table.loading" :data="table.data" :columns="table.columns"></Table>
+    <Table :height="300" :loading="table.loading" :data="table.data" :columns="table.columns"></Table>
   </div>
 </template>
 
@@ -11,6 +11,13 @@ import { findComponentUpward } from "@/utils/helper";
 
 export default {
   name: "SkuTable",
+
+  props: {
+    initSkus: {
+      type: [Array],
+      default: () => []
+    }
+  },
 
   data() {
     return {
@@ -22,17 +29,34 @@ export default {
     };
   },
 
+  watch: {
+    initSkus: {
+      handler() {
+        this.updateTableDataAndColumns();
+      },
+      immediate: true
+    }
+  },
+
   methods: {
+    updateTableDataAndColumns(){
+      if(this.initSkus.length) {
+        console.log(this.initSkus);
+        // this._table_columns(this.initSkus);
+        // this._table_data(this.initSkus);    
+      }    
+    },
+
     generateSkuTable() {
       const component = findComponentUpward(this, "ProductCreateOrUpdate");
       const productName = component.form.model.name;
       const skuData = component.$refs["category-property"].getSkuData();
 
-      this._table_columns(productName, skuData);
-      this._table_data(productName, skuData);
+      this._table_columns(skuData);
+      this._table_data(skuData, productName);
     },
 
-    _table_columns(productName, skuData) {
+    _table_columns(skuData) {
       const defaultColumns = [
         {
           type: "index",
@@ -42,7 +66,6 @@ export default {
         {
           title: "商品名称",
           key: "name",
-          width: 100,
         },
         {
           title: "商品库存",
@@ -98,7 +121,7 @@ export default {
       this.table.columns = defaultColumns.concat(dynamicColumns);
     },
 
-    _table_data(productName, skuData) {
+    _table_data(skuData, productName) {
       const defaultDataItem = {
         name: productName,
         stock: 0,
@@ -108,9 +131,15 @@ export default {
       const data = [];
 
       skuData.map(sku => {
-        const obj = Object.assign({}, defaultDataItem);
+        let obj = Object.assign({}, defaultDataItem);
+        obj.properties = [];
         sku.map(item => {
+          item.name && (obj.name = item.name)
+          item.stock && (obj.stock = item.stock)
+          item.price && (obj.price = item.price)
+
           obj[`property_id_${item.property_id}`] = item.property_value_name;
+          obj.properties.push(item)
         });
         data.push(obj);
       });

@@ -1,9 +1,17 @@
 <template>
   <div>
-    <category-property-value 
-      v-for="item in properties" 
-      :key="item.property_id" 
-      :property="item"></category-property-value>
+    <Spin v-if="spinShow" style="text-align: left;">
+      <Icon type="ios-loading" size="14" class="spin-icon-load"></Icon>正在加载商品规格...
+    </Spin>
+
+    <div v-else>
+      <category-property-value
+        v-for="item in properties"
+        :key="item.property_id"
+        :property="item"
+        :property-checked="initProperties.filter(p => p.property_id === item.property_id)"
+      ></category-property-value>
+    </div>
   </div>
 </template>
 
@@ -17,9 +25,18 @@ export default {
 
   components: { CategoryPropertyValue },
 
+  props: {
+    initProperties: {
+      type: [Array],
+      default: () => []
+    }
+  },
+
   data() {
     return {
-      properties: []
+      properties: [],
+
+      spinShow: false
     };
   },
 
@@ -34,12 +51,19 @@ export default {
   methods: {
     categoryChangeWatcher(categoryId) {
       if (categoryId) {
+        this.spinShow = true;
         GET_CATEGORIES_PROPERTIES(categoryId)
           .then(response => {
             this.properties = response.data;
+            this.$nextTick(() => {
+              this.spinShow = false;
+            });
           })
           .catch(() => {
             this.properties = [];
+            this.$nextTick(() => {
+              this.spinShow = false;
+            });
           });
       } else {
         this.properties = [];
@@ -68,3 +92,20 @@ export default {
 };
 </script>
 
+<style lang="less">
+.spin-icon-load {
+  animation: animate-spin 1s linear infinite;
+}
+
+@keyframes animate-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

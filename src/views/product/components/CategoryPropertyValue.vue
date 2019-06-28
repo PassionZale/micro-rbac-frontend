@@ -23,6 +23,20 @@ export default {
     property: {
       type: [Object],
       default: () => ({})
+    },
+
+    propertyChecked: {
+      type: [Array],
+      default: () => []
+    }
+  },
+
+  watch: {
+    propertyChecked: {
+      handler() {
+        this.updateCheckAllGroup();
+      },
+      immediate: true
     }
   },
 
@@ -34,6 +48,14 @@ export default {
   },
 
   methods: {
+    updateCheckAllGroup() {
+      if(this.propertyChecked.length) {
+        const propertyValueIds = this.propertyChecked.map(item => item.property_value_id);
+        this.checkAllGroup = Array.from(new Set(propertyValueIds))
+        this.initCheckAllStatus();
+      }
+    },
+
     selection() {
       if (!this.checkAllGroup.length) return [];
 

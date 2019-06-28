@@ -22,11 +22,24 @@ export default {
     }
   },
 
+  watch: {
+    value: {
+      handler() {
+        this.updateSelections();
+      },
+      immediate: true
+    }
+  },
+
   created() {
     this.loadData();
   },
 
   methods: {
+    updateSelections() {
+      this.selections = this.value.map(item => item);
+    },
+
     loadData() {
       GET_CATEGORIES_FORMAT("cascader").then(response => {
         this.categories = response.data;
