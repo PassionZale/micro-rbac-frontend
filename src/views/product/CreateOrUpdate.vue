@@ -1,12 +1,12 @@
 <template>
-  <Form :label-width="160" label-position="left" :model="form.model" :rules="form.rules">
-    <FormItem label="商品名称">
+  <Form ref="product-create-or-update-form" :label-width="160" label-position="left" :model="form.model" :rules="form.rules">
+    <FormItem label="商品名称" prop="name">
       <Input type="text" v-model="form.model.name"/>
     </FormItem>
-    <FormItem label="商品品牌">
+    <FormItem label="商品品牌" prop="brand_id">
       <brand-select v-model="form.model.brand_id"></brand-select>
     </FormItem>
-    <FormItem label="商品分类">
+    <FormItem label="商品分类" prop="category_id">
       <category-cascader v-model="form.model.category_id"></category-cascader>
     </FormItem>
     <FormItem label="商品规格">
@@ -60,7 +60,10 @@ export default {
 
   watch: {
     "form.model.category_id": {
-      handler(val) {
+      handler(val, old) {
+        console.log(val);
+        console.log(old);
+        console.log("==========watch==========");
         this.$bus.emit("on-category-change", val[1] || "");
       },
       immediate: true
@@ -113,15 +116,22 @@ export default {
     confirm() {
       const skus = this.$refs["sku-table"].table.data;
       const params = Object.assign({}, this.form.model, { category_id: this.$categoryId }, { skus });
-      // TODO 表单验证
-      this.btnLoading = true;
-      POST_PRODUCT(params).then(response => {
-        this.$Message.success("操作成功");
-        this.goBack();
-      }).catch(error => {
-        this.btnLoading = false;
-        this.$Message.error(error.message);
-      })
+
+      this.$refs["product-create-or-update-form"].validate(valid => {
+        if (valid) {
+          console.log(2)
+          this.btnLoading = true;
+          const requestApi = this.id ? PUT_PRODUCT(this.id, params) : POST_PRODUCT(params);
+          requestApi.then(() => {
+            this.$Message.success("操作成功");
+            this.goBack();
+            this.btnLoading = false;
+          }).catch(error => {
+            this.btnLoading = false;
+            this.$Message.error(error.message)
+          });
+        }
+      });
     },
 
     goBack() {

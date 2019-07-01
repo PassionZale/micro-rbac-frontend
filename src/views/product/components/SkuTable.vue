@@ -8,6 +8,14 @@
 
 <script>
 import { findComponentUpward } from "@/utils/helper";
+import CREATE_SKU_UNIQUE_ID from "../utils/";
+
+const SKU_ITEM = Object.freeze({
+  name: "",
+  price: 0,
+  stock: 0,
+  properties: []
+});
 
 export default {
   name: "SkuTable",
@@ -42,21 +50,27 @@ export default {
     updateTableDataAndColumns(){
       if(this.initSkus.length) {
         console.log(this.initSkus);
-        // this._table_columns(this.initSkus);
-        // this._table_data(this.initSkus);    
+        this._table_columns(this.initSkus);
+        this._table_data(this.initSkus);    
       }    
     },
 
     generateSkuTable() {
       const component = findComponentUpward(this, "ProductCreateOrUpdate");
-      const productName = component.form.model.name;
-      const skuData = component.$refs["category-property"].getSkuData();
+      const name = component.form.model.name;
+      const propertySelection = component.$refs["category-property"].propertySelection();
+      const skus = [];
 
-      this._table_columns(skuData);
-      this._table_data(skuData, productName);
+      propertySelection.forEach(properties => {
+        const skuItem = Object.assign({}, SKU_ITEM, { name: name, properties });
+        skus.push(skuItem)
+      });
+
+      this._table_columns(skus);
+      this._table_data(skus);
     },
 
-    _table_columns(skuData) {
+    _table_columns(skus) {
       const defaultColumns = [
         {
           type: "index",
@@ -110,7 +124,7 @@ export default {
       ];
 
       const dynamicColumns = [];
-      const tmp = skuData[0] || [];
+      const tmp = skus.length ? (skus[0]["properties"] || []) : [];
       tmp.map(item => {
         dynamicColumns.push({
           title: item.property_name,
@@ -121,30 +135,33 @@ export default {
       this.table.columns = defaultColumns.concat(dynamicColumns);
     },
 
-    _table_data(skuData, productName) {
-      const defaultDataItem = {
-        name: productName,
-        stock: 0,
-        price: 0
-      };
-
+    _table_data(skus) {
       const data = [];
-
-      skuData.map(sku => {
-        let obj = Object.assign({}, defaultDataItem);
-        obj.properties = [];
-        sku.map(item => {
-          item.name && (obj.name = item.name)
-          item.stock && (obj.stock = item.stock)
-          item.price && (obj.price = item.price)
-
-          obj[`property_id_${item.property_id}`] = item.property_value_name;
-          obj.properties.push(item)
+      skus.map(sku => {
+        sku.properties.map(property => {
+          sku[`property_id_${property.property_id}`] = property.property_value_name;
         });
-        data.push(obj);
+        sku["__unique__"] = CREATE_SKU_UNIQUE_ID(sku);
+        sku["__found__"] = this.table.data.find(item => item["__unique__"] === sku["__unique__"]) ? true: false;
+        data.push(sku);
       });
 
-      this.table.data = data;
+      if(this.table.data.length) {
+        const uniqueData = [];
+        const notUniqueData = data.filter(item => item["__found__"] === false);
+
+        data.map(item => {
+          if(item["__found__"]) {
+            const found = this.table.data.find(v => v["__unique__"] === item["__unique__"]);
+            uniqueData.push(Object.assign({}, found, { name: item.name } ));
+          }
+        });
+
+        this.table.data = Array.from(new Set([...uniqueData, ...notUniqueData]));
+      } else {
+        this.table.data = data;
+      }
+
     }
   }
 };

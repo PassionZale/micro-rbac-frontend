@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Spin v-if="spinShow" style="text-align: left;">
+    <Spin v-show="spinShow" style="text-align: left;">
       <Icon type="ios-loading" size="14" class="spin-icon-load"></Icon>正在加载商品规格...
     </Spin>
 
-    <div v-else>
+    <div v-show="!spinShow">
       <category-property-value
         v-for="item in properties"
         :key="item.property_id"
@@ -43,13 +43,15 @@ export default {
   created() {
     this.$bus.on("on-category-change", this.categoryChangeWatcher);
 
-    this.$once("hook:beforeDestory", () => {
+    // 若不 off 掉句柄函数, 则每次 CategoryProperty created 时, 会数次执行 categoryChangeWatcher()
+    this.$once("hook:beforeDestroy", () => {
       this.$bus.off("on-category-change", this.categoryChangeWatcher);
     });
   },
 
   methods: {
     categoryChangeWatcher(categoryId) {
+      console.log(categoryId);
       if (categoryId) {
         this.spinShow = true;
         GET_CATEGORIES_PROPERTIES(categoryId)
@@ -70,7 +72,7 @@ export default {
       }
     },
 
-    getSkuData() {
+    propertySelection() {
       const components = findComponentsDownward(this, "CategoryPropertyValue");
       let selection = [];
       components.map(component => {
