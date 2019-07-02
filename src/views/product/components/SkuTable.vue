@@ -1,14 +1,20 @@
 <template>
   <div>
-    <Button type="primary" size="small" @click="generateSkuTable()">确认生成</Button>
+    <Button type="primary" size="small" @click="generateSkuTable()">生成组合</Button>
+    <Button type="primary" size="small" :disabled="!table.data.length" @click="modalShow = !modalShow">批量录入</Button>
+    <span style="color: #ed4014;">{{errorMsg}}</span>
     <br>
+    <slot></slot>
     <Table :height="300" :loading="table.loading" :data="table.data" :columns="table.columns"></Table>
+
+    <sku-table-batch-modal v-model="modalShow" @on-batch="batchInputData"></sku-table-batch-modal>
   </div>
 </template>
 
 <script>
 import { findComponentUpward } from "@/utils/helper";
-import CREATE_SKU_UNIQUE_ID from "../utils/";
+import SkuTableBatchModal from "./SkuTableBatchModal"
+import { CREATE_SKU_UNIQUE_ID } from "../utils";
 
 const SKU_ITEM = Object.freeze({
   name: "",
@@ -20,6 +26,8 @@ const SKU_ITEM = Object.freeze({
 export default {
   name: "SkuTable",
 
+  components: { SkuTableBatchModal },
+
   props: {
     initSkus: {
       type: [Array],
@@ -29,6 +37,10 @@ export default {
 
   data() {
     return {
+      errorMsg: "",
+
+      modalShow: false,
+
       table: {
         loading: false,
         data: [],
@@ -49,16 +61,26 @@ export default {
   methods: {
     updateTableDataAndColumns(){
       if(this.initSkus.length) {
-        console.log(this.initSkus);
         this._table_columns(this.initSkus);
         this._table_data(this.initSkus);    
       }    
     },
 
     generateSkuTable() {
+      this.errorMsg = "";
+
       const component = findComponentUpward(this, "ProductCreateOrUpdate");
       const name = component.form.model.name;
+      if(!name) {
+        this.errorMsg = "商品名称暂未填写";
+        return;
+      }
+
       const propertySelection = component.$refs["category-property"].propertySelection();
+      if(!propertySelection.length) {
+        this.errorMsg = "商品规格暂未勾选";
+        return;
+      }
       const skus = [];
 
       propertySelection.forEach(properties => {
@@ -162,6 +184,14 @@ export default {
         this.table.data = data;
       }
 
+    },
+
+    batchInputData(stockAndPrice) {
+      const { stock, price } = stockAndPrice;
+
+      this.table.data = this.table.data.map(item => {
+        return Object.assign({}, item, {stock, price})
+      });
     }
   }
 };

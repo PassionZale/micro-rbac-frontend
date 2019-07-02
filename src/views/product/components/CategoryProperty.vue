@@ -122,8 +122,6 @@ export default {
 
     propertyValueCreateSuccess(property_value) {
       this.properties[this.modal.index]["property_values"].push(property_value);
-      // const components = findComponentsDownward(this, "CategoryPropertyValue");
-      // components[this.index].property.property_values.push(property_value);
     }
   }
 };
