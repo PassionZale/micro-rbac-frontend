@@ -6,24 +6,33 @@
 
     <div v-show="!spinShow">
       <category-property-value
-        v-for="item in properties"
+        v-for="(item, index) in properties"
         :key="item.property_id"
+        @on-create-btn-click="properyValueCreateClick(item, index)"
         :property="item"
         :property-checked="initProperties.filter(p => p.property_id === item.property_id)"
       ></category-property-value>
     </div>
+
+    <category-property-value-create-modal
+      v-model="modal.show" 
+      :title="modal.title"
+      :property-id="modal.propertyId" 
+      @on-success="propertyValueCreateSuccess"
+    ></category-property-value-create-modal>
   </div>
 </template>
 
 <script>
 import { GET_CATEGORIES_PROPERTIES } from "@/api/category";
 import CategoryPropertyValue from "./CategoryPropertyValue";
+import CategoryPropertyValueCreateModal from "./CategoryPropertyValueCreateModal";
 import { findComponentsDownward, descartes } from "@/utils/helper";
 
 export default {
   name: "CategoryProperty",
 
-  components: { CategoryPropertyValue },
+  components: { CategoryPropertyValue, CategoryPropertyValueCreateModal },
 
   props: {
     initProperties: {
@@ -34,9 +43,20 @@ export default {
 
   data() {
     return {
+      spinShow: false,
+
       properties: [],
 
-      spinShow: false
+      modal: {
+        // 模态框显示状态
+        show: false,
+        // 模态框标题
+        title: "",
+        // 当前 CategoryProperValue 索引
+        index: "",
+        // Property Id
+        propertyId: ""
+      },
     };
   },
 
@@ -89,6 +109,21 @@ export default {
       console.log(selection);
 
       return selection;
+    },
+
+    properyValueCreateClick(property, index) {
+      this.modal.title = property.property_name;
+      this.modal.propertyId = property.property_id;
+      this.modal.index = index;
+      this.$nextTick(() => {
+        this.modal.show = !this.modal.show;
+      });
+    },
+
+    propertyValueCreateSuccess(property_value) {
+      this.properties[this.modal.index]["property_values"].push(property_value);
+      // const components = findComponentsDownward(this, "CategoryPropertyValue");
+      // components[this.index].property.property_values.push(property_value);
     }
   }
 };

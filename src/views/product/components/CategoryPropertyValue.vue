@@ -3,7 +3,7 @@
     <Checkbox :value="checkAll" @click.prevent.native="checkAllBtnClick()">
       <strong>{{ property.property_name }}</strong>
     </Checkbox>
-    <Button type="primary" size="small">{{ "新增" + property.property_name }}</Button>
+    <Button type="primary" size="small" @click="btnClick()">{{ "添加" + property.property_name }}</Button>
     <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
       <Checkbox
         v-for="item in property.property_values"
@@ -95,6 +95,10 @@ export default {
 
     checkAllGroupChange() {
       this.initCheckAllStatus();
+    },
+
+    btnClick() {
+      this.$emit("on-create-btn-click");
     }
   }
 };

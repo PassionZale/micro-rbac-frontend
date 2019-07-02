@@ -50,7 +50,7 @@
 import { LayoutTree } from "@/components/layout";
 import Pagination from "@/components/pagination";
 import PropertyCreateOrUpdateModal from "./components/PropertyCreateOrUpdateModal";
-import PropertyValueCreateOrUpdateModal from "./components/PropertyValueCreateOrupdateModal";
+import PropertyValueCreateOrUpdateModal from "./components/PropertyValueCreateOrUpdateModal";
 import { GET_PROPERTIES_FORMAT, DELETE_PROPERTY } from "@/api/property";
 import {
   GET_PROPERTY_VALUES,
