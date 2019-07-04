@@ -4,7 +4,11 @@
       <Checkbox :value="checkAll" @click.prevent.native="checkAllBtnClick()">全选</Checkbox>
     </div>
     <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
-      <Checkbox v-for="item in permissions" :key="item.id" :label="item.id">{{ item.name }}</Checkbox>
+      <Row>
+        <Col v-for="item in permissions" :key="item.id" span="6">
+          <Checkbox :label="item.id">{{ item.name }}</Checkbox>
+        </Col>
+      </Row>
     </CheckboxGroup>
   </div>
 </template>

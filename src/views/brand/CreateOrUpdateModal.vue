@@ -99,7 +99,6 @@ export default {
     },
 
     resetForm() {
-      console.log(1)
       this.$refs["create-or-update-form"].resetFields();
     },
 
