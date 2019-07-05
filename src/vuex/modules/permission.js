@@ -2,7 +2,7 @@ import { basicRoutes, dynamicRoutes } from "@/router"
 
 function hasPermission(permissions, route) {
   if (route.meta && route.meta.permissions) {
-    return permissions.some(permission => route.meta.permissions.indexOf(permission) > -1);
+    return permissions.some(permission => route.meta.permissions.indexOf(permission.code) > -1);
   } else {
     return true;
   }
