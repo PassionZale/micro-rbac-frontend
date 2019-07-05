@@ -32,8 +32,10 @@ router.beforeEach((to, from, next) => {
 
           store.dispatch("InitPermissionViaUser", user)
             .then(() => {
-              next()
-            }).catch(() => {
+              router.addRoutes(store.getters.permission.addRoutes);
+              next({ ...to, replace: true });
+            }).catch(error => {
+              console.log(error);
               Auth.removeToken()
               iView.Message.error("无法解析用户权限菜单")
               next({ path: "/login" })

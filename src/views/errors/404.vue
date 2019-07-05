@@ -1,5 +1,7 @@
 <template>
-  <div>404</div>
+  <div>
+    // http://asvignesh.in/import-sql-dump-to-mysql-using-codeigniter/
+  </div>
 </template>
 
 <script>

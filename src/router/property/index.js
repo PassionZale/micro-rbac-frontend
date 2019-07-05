@@ -5,7 +5,7 @@ const router = {
   redirect: { name: "property-list" },
   component: () => import("@/components/container"),
   children: [
-    { path: "/", name: "property-list", meta: { title: "属性列表" }, component: () => import("@/views/property/List")}
+    { path: "/", name: "property-list", meta: { title: "属性列表", permissions: ["can select property"] }, component: () => import("@/views/property/List")}
   ]
 }
 

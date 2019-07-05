@@ -77,6 +77,7 @@ export default {
           this.btnLoading = true;
           POST_LOGIN(this.form.model)
             .then(response => {
+              this.btnLoading = false;
               Auth.setToken(response.data);
               this.$router.push("/");
             })

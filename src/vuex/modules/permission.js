@@ -1,6 +1,17 @@
+import { basicRoutes, dynamicRoutes } from "@/router"
+
+function hasPermission(permissions, route) {
+  if (route.meta && route.meta.permissions) {
+    return permissions.some(permission => route.meta.permissions.indexOf(permission) > -1);
+  } else {
+    return true;
+  }
+}
+
 const permission = {
   state: {
-    menus: [],
+    routes: [],
+    addRoutes: [],
     roles: [],
     permissions: []
   },
@@ -8,6 +19,10 @@ const permission = {
   mutations: {
     SET_MENUS: (state, menus) => {
       state.menus = menus
+    },
+    SET_ROUTES: (state, routes) => {
+      state.addRoutes = routes;
+      state.routes = basicRoutes.concat(routes); 
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -18,10 +33,28 @@ const permission = {
   },
 
   actions: {
+    // allpermission
     InitPermissionViaUser({ commit }, user) {
       return new Promise(resolve => {
-        commit("SET_ROLES", user.roles)
-        commit("SET_PERMISSIONS", user.permissions)
+        const accessRoutes = dynamicRoutes.filter(v => {
+          if (hasPermission(user.permissions, v)) {
+            if (v.children && v.children.length) {
+              v.children = v.children.filter(child => {
+                if (hasPermission(user.permissions, child)) {
+                  return child;
+                }
+                return false;
+              });
+              return v;
+            } else {
+              return v;
+            }
+          }
+          return false;
+        });
+        commit("SET_ROLES", user.roles);
+        commit("SET_PERMISSIONS", user.permissions);
+        commit("SET_ROUTES", accessRoutes);
         resolve()
       })
     }
