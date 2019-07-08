@@ -1,7 +1,7 @@
 const router = {
   name: "product",
   path: "/product",
-  meta: { title: "商品管理" },
+  meta: { title: "商品管理", permissions: ["can select product"] },
   redirect: { name: "product-list" },
   component: () => import("@/components/container"),
   children: [

@@ -1,7 +1,7 @@
 const router = {
   path: "user",
   name: "user",
-  meta: { title: "用户设置" },
+  meta: { title: "用户设置", permissions: ["can select user"] },
   redirect: { name: "user-list" },
   component: () => import("@/components/container/ContainerBase"),
   children: [

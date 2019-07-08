@@ -1,7 +1,7 @@
 const router = {
   name: "category",
   path: "/category",
-  meta: { title: "分类管理" },
+  meta: { title: "分类管理", permissions: ["can select category"] },
   redirect: { name: "category-list" },
   component: () => import("@/components/container"),
   children: [

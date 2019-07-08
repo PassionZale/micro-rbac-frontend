@@ -36,22 +36,27 @@ const permission = {
     // allpermission
     InitPermissionViaUser({ commit }, user) {
       return new Promise(resolve => {
-        const accessRoutes = dynamicRoutes.filter(v => {
-          if (hasPermission(user.permissions, v)) {
-            if (v.children && v.children.length) {
-              v.children = v.children.filter(child => {
-                if (hasPermission(user.permissions, child)) {
-                  return child;
-                }
-                return false;
-              });
-              return v;
-            } else {
-              return v;
+        let accessRoutes = "";
+        if(user.is_superuser == 1) {
+          accessRoutes = dynamicRoutes
+        } else {
+          accessRoutes = dynamicRoutes.filter(v => {
+            if (hasPermission(user.permissions, v)) {
+              if (v.children && v.children.length) {
+                v.children = v.children.filter(child => {
+                  if (hasPermission(user.permissions, child)) {
+                    return child;
+                  }
+                  return false;
+                });
+                return v;
+              } else {
+                return v;
+              }
             }
-          }
-          return false;
-        });
+            return false;
+          });
+        }
         commit("SET_ROLES", user.roles);
         commit("SET_PERMISSIONS", user.permissions);
         commit("SET_ROUTES", accessRoutes);

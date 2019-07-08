@@ -1,7 +1,7 @@
 const router = {
   name: "property",
   path: "/property",
-  meta: { title: "属性管理" },
+  meta: { title: "属性管理", permissions: ["can select property"] },
   redirect: { name: "property-list" },
   component: () => import("@/components/container"),
   children: [

@@ -1,45 +1,95 @@
 <template>
   <div class="ContainerSidebar">
-    <Menu theme="dark" width="auto">
-      <MenuItem name="welcome" to="/welcome">
-        <Icon type="md-document"/>欢迎
-      </MenuItem>
+    <Menu
+      ref="sidebar-menu"
+      theme="dark"
+      width="auto"
+      :active-name="activeName"
+      :open-names="openNames"
+    >
+      <div v-for="item in menus">
+        <Submenu v-if="item.children && item.children.length && !item.hasOwnProperty('redirect')" :name="item.name">
+          <template slot="title">
+            <Icon v-if="item.meta.icon" :type="item.meta.icon" />
+            {{ item.meta.title }}
+          </template>
+          <MenuItem
+            v-for="child in item.children"
+            :key="child.name"
+            :name="child.name"
+            :to="child"
+          >{{ child.meta.title }}</MenuItem>
+        </Submenu>
 
-      <Submenu name="system">
-        <template slot="title">
-          <Icon type="md-people"/>
-          系统管理
-        </template>
-        <MenuItem name="permission" to="/system/permission">权限设置</MenuItem>
-        <MenuItem name="role" to="/system/role">角色设置</MenuItem>
-        <MenuItem name="user" to="/system/user">用户设置</MenuItem>
-      </Submenu>
-
-      <MenuItem name="brand" to="/brand">
-        <Icon type="md-briefcase" />
-        品牌管理
-      </MenuItem>
-      <MenuItem name="category" to="/category">
-        <Icon type="ios-paper"/>
-        分类管理
-      </MenuItem>
-      <MenuItem name="property" to="/property">
-        <Icon type="ios-paper"/>
-        属性管理
-      </MenuItem>
-      <MenuItem name="product" to="/product">
-        <Icon type="ios-paper"/>
-        商品管理
-      </MenuItem>
+        <MenuItem v-else :name="item.name" :to="item">
+          <Icon v-if="item.meta && item.meta.icon" :type="item.meta.icon" />
+          {{ item.meta.title }}
+        </MenuItem>
+      </div>
     </Menu>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  name: "ContainerSidebar"
+  name: "ContainerSidebar",
+
+  data() {
+    return {
+      menus: [],
+
+      openNames: [],
+
+      activeName: ""
+    };
+  },
+
+  computed: {
+    ...mapGetters(["permission"])
+  },
+
+  watch: {
+    $route() {
+      this.initActiveMenu();
+    }
+  },
+
+  created() {
+    this.initMenu();
+    this.initActiveMenu();
+  },
+
+  methods: {
+    initMenu() {
+      this.menus = this.permission.routes.filter(
+        route => route.hidden !== true
+      );
+    },
+
+    initActiveMenu() {
+      this.openNames = [];
+
+      const routeMatched = this.$route.matched;
+      
+      this.openNames.push(routeMatched[0]["name"]);
+
+      if(routeMatched[0]["redirect"]) {
+        this.activeName = routeMatched[0]["name"];
+      } else {
+        this.activeName = routeMatched[1]["name"];
+      }
+
+      this.$nextTick(() => {
+        this.$refs["sidebar-menu"].updateOpened();
+        this.$refs["sidebar-menu"].updateActiveName();
+      });
+    }
+  }
 };
 </script>
+
 
 <style lang="less">
 .ContainerSidebar {

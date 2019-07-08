@@ -31,11 +31,29 @@ export const basicRoutes = [
   },
 
   {
+    path: "/403",
+    name: "403",
+    meta: { title: "Forbidden" },
+    hidden: true,
+    props: {
+      code: 403,
+      desc: "Forbidden",
+      remark: "Access to this resource on the server is denied!" 
+    },
+    component: () => import("@/views/errors/ErrorView")
+  },
+
+  {
     path: "/404",
     name: "404",
-    meta: { title: "PAGE NOT FOUND" },
+    meta: { title: "Not found" },
     hidden: true,
-    component: () => import("@/views/errors/404")
+    props: {
+      code: 404,
+      desc: "Not Found",
+      remark: "This is not the web page you are looking for" 
+    },
+    component: () => import("@/views/errors/ErrorView")
   },
 ]
 

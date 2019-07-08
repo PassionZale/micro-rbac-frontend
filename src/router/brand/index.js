@@ -1,7 +1,7 @@
 const router = {
   name: "brand",
   path: "/brand",
-  meta: { title: "品牌管理" },
+  meta: { title: "品牌管理", permissions: ["can select brand"] },
   redirect: { name: "brand-list" },
   component: () => import("@/components/container"),
   children: [
