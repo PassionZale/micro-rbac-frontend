@@ -13,12 +13,22 @@ export const basicRoutes = [
   {
     path: "/",
     name: "root",
-    redirect: { name: "welcome" },
+    redirect: { name: "welcome-index" },
     component: () => import("@/components/container"),
     hidden: true,
     children: [
-      { path: "welcome", name: "welcome", meta: { title: "欢迎" }, component: () => import("@/views/example") },
       { path: "profile", name: "profile", meta: { title: "个人中心" }, component: () => import("@/views/example") },
+    ]
+  },
+
+  {
+    path: "/welcome",
+    name: "welcome",
+    meta: { title: "欢迎" },
+    redirect: { name: "welcome-index" },
+    component: () => import("@/components/container"),
+    children: [
+      { path: "/", name: "welcome-index", meta: { title: "欢迎" }, component: () => import("@/views/example") },
     ]
   },
 
