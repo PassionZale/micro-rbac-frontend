@@ -5,14 +5,12 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var CleanWebpackPlugin = require('clean-webpack-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var pathsToClean = ['dist']
-var packageJson = require("./package.json")
 
 var envs = require("./src/utils/env")
 
 module.exports = {
   entry: {
-    "main": "./src/main.js",
-    "vendor": Object.keys(packageJson.dependencies)
+    "main": "./src/main.js"
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -64,14 +62,15 @@ module.exports = {
     new CleanWebpackPlugin(pathsToClean),
     new ExtractTextPlugin('main.css'),
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor'],
+      name: ['commons'],
       filename: '[name].js'
     }),
     new HtmlWebpackPlugin({
-      chunks: ['main', 'vendor'],
+      chunks: ['main', 'commons'],
       inject: 'body',
       hash: true,
       title: 'micro-rbac-frontend',
+      env: envs.ENV,
       filename: 'index.html',
       template: 'index.ejs',
       minify: {
@@ -92,6 +91,15 @@ module.exports = {
       '@': path.resolve(__dirname, './src')
     },
     extensions: ['*', '.js', '.vue', '.json'],
+  },
+  externals: {
+    "axios": "axios",
+    "dayjs": "dayjs",
+    "iview": "iview",
+    "blueimp-md5": "md5",
+    "vue": "Vue",
+    "vue-router": "VueRouter",
+    "vuex": "Vuex"
   },
   devServer: {
     host: envs.WEBPACK_DEV_SERVER_HOST,

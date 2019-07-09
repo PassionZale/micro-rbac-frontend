@@ -17,7 +17,7 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.devtools = true
 
-const accessPath = ["/login", "/404"]
+const accessPath = ["/login", "/403", "/404"]
 
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()

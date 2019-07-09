@@ -33,7 +33,6 @@ const permission = {
   },
 
   actions: {
-    // allpermission
     InitPermissionViaUser({ commit }, user) {
       return new Promise(resolve => {
         let accessRoutes = "";

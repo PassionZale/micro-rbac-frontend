@@ -4,13 +4,27 @@
 <head>
   <meta charset="utf-8">
   <title><%= htmlWebpackPlugin.options.title %></title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
 </head>
 
 <body>
   <div id="app"></div>
+
+  <script src="static/libs/axios/axios.min.js"></script>
+  <script src="static/libs/dayjs/dayjs.min.js"></script>
+  <script src="static/libs/blueimp-md5/md5.min.js"></script>
+  <% if (htmlWebpackPlugin.options.env === "production" ) { %>
+    <script src="static/libs/vue/vue.min.js"></script>
+  <% } else { %>
+    <script src="static/libs/vue/vue.js"></script>
+  <% }%>
+  <script src="//unpkg.com/iview/dist/iview.min.js"></script>
+  <script src="static/libs/vue-router/vue-router.min.js"></script>
+  <script src="static/libs/vuex/vuex.min.js"></script>
 </body>
 
 </html>
