@@ -15,7 +15,7 @@ let baseURL;
 switch (process.env.NODE_ENV) {
   // 测试环境
   case "fat":
-    baseURL = "http://127.0.0.1:8000"; 
+    baseURL = ""; 
     break;
   // 生产环境
   case "production":
