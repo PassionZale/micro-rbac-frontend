@@ -10,7 +10,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="createBtn()">新增</Button>
+      <Button type="primary" @click="createBtn()" :disabled="!resolvePermission('brand-create')">新增</Button>
     </template>
 
     <template slot="table">
@@ -30,9 +30,12 @@ import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
 import CreateOrUpdateModal from "./CreateOrUpdateModal"
 import { GET_BRANDS, DELETE_BRAND } from "@/api/brand";
+import { permissionExist } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination, CreateOrUpdateModal },
+
+  mixins: [permissionExist],
 
   data() {
     return {

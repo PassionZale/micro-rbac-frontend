@@ -19,12 +19,15 @@
   <script src="static/libs/blueimp-md5/md5.min.js"></script>
   <% if (htmlWebpackPlugin.options.env === "production" ) { %>
     <script src="static/libs/vue/vue.min.js"></script>
+    <script src="static/libs/vue-router/vue-router.min.js"></script>
+    <script src="static/libs/vuex/vuex.min.js"></script>
   <% } else { %>
     <script src="static/libs/vue/vue.js"></script>
+    <script src="static/libs/vue-router/vue-router.js"></script>
+    <script src="static/libs/vuex/vuex.js"></script>
   <% }%>
   <script src="//unpkg.com/iview/dist/iview.min.js"></script>
-  <script src="static/libs/vue-router/vue-router.min.js"></script>
-  <script src="static/libs/vuex/vuex.min.js"></script>
+
 </body>
 
 </html>

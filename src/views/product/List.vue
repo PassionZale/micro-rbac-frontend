@@ -16,7 +16,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="$router.push({ name: 'product-create' })">新增</Button>
+      <Button type="primary" @click="resolveRoute({name: 'product-create'})">新增</Button>
     </template>
 
     <template slot="table">
@@ -35,9 +35,12 @@ import Pagination from "@/components/pagination";
 import BrandSelect from "@/components/brand";
 import { CategoryCascader } from "@/components/category";
 import { GET_PRODUCTS, DELETE_PRODUCT } from "@/api/product";
+import { routeExist } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination, BrandSelect, CategoryCascader },
+
+  mixins: [routeExist],
 
   data() {
     return {
