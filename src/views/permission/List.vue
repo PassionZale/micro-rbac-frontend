@@ -16,7 +16,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="$router.push({ name: 'permission-create' })">新增</Button>
+      <Button type="primary" @click="resolveRoute({ name: 'permission-create' }, 'can create permission')">新增</Button>
     </template>
 
     <template slot="table">
@@ -33,9 +33,12 @@
 import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
 import { GET_PERMISSIONS, DELETE_PERMISSION } from "@/api/permission";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination },
+
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -89,14 +92,15 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.$router.push({ name: "permission-detail", query: { id: params.row.id }})
+                    this.resolveRoute({ name: "permission-detail", query: { id: params.row.id } }, "can update permission");
                   }
                 }
               }, "编辑");
 
               const removeBtn = h("Button", {
                 props: {
-                  type: "text"
+                  type: "text",
+                  disabled: !this.resolvePermission("can delete permission")
                 },
               }, "删除");
 

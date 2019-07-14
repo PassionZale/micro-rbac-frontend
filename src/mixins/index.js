@@ -1,4 +1,5 @@
-import permissionExist from "./permissionExist"
-import routeExist from "./routeExist"
+import permissionValidator from "./permissionValidator"
 
-export { permissionExist, routeExist }
+export { permissionValidator }
+
+export default permissionValidator

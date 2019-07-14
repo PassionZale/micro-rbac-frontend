@@ -16,7 +16,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="resolveRoute({name: 'product-create'})">新增</Button>
+      <Button type="primary" @click="resolveRoute({name: 'product-create'}, 'can create product')">新增</Button>
     </template>
 
     <template slot="table">
@@ -35,12 +35,12 @@ import Pagination from "@/components/pagination";
 import BrandSelect from "@/components/brand";
 import { CategoryCascader } from "@/components/category";
 import { GET_PRODUCTS, DELETE_PRODUCT } from "@/api/product";
-import { routeExist } from "@/mixins";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination, BrandSelect, CategoryCascader },
 
-  mixins: [routeExist],
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -102,10 +102,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.$router.push({
-                        name: "product-detail",
-                        query: { id: params.row.id }
-                      });
+                      this.resolveRoute({name: "product-detail",query: { id: params.row.id }}, "can update product")
                     }
                   }
                 },
@@ -116,7 +113,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can delete product")
                   }
                 },
                 "删除"

@@ -2,7 +2,7 @@
   <layout-list>
     <template slot="form">
       <Form inline :label-width="80">
-        <FormItem label="用户名">
+        <FormItem label="用户名" @submit.native.prevent>
           <Input type="text" v-model="form.username"/>
         </FormItem>
         <Button type="primary" @click="loadData(true)">查询</Button>
@@ -10,7 +10,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="$router.push({ name: 'user-create' })">新增</Button>
+      <Button type="primary" @click="resolveRoute({ name: 'user-create' }, 'can create user')">新增</Button>
     </template>
 
     <template slot="table">
@@ -30,9 +30,12 @@ import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
 import PasswordUpdateModal from "./components/PasswordUpdateModal";
 import { GET_USERS, DELETE_USER } from "@/api/user";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination, PasswordUpdateModal },
+
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -105,10 +108,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.$router.push({
-                        name: "user-detail",
-                        query: { id: params.row.id }
-                      });
+                      this.resolveRoute({name: "user-detail",query: { id: params.row.id }}, "can update user");
                     }
                   }
                 },
@@ -119,7 +119,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can update user")
                   },
                   on: {
                     click: () => {
@@ -135,7 +136,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can delete user")
                   }
                 },
                 "删除"

@@ -1,9 +1,9 @@
 <template>
   <layout-tree>
     <template slot="tree-tool">
-      <Button type="primary" @click="createBtn()">新建</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="updateBtn('tree')">编辑</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="removeBtn('click')">删除</Button>
+      <Button type="primary" @click="createBtn()" :disabled="!resolvePermission('can create property')">新建</Button>
+      <Button type="primary" :disabled="$disActionBtn || !resolvePermission('can update property')" @click="updateBtn('tree')">编辑</Button>
+      <Button type="primary" :disabled="$disActionBtn || !resolvePermission('can delete property')" @click="removeBtn('click')">删除</Button>
     </template>
 
     <template slot="tree">
@@ -20,7 +20,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="createBtn('table')" :disabled="$disActionBtn">新建属性</Button>
+      <Button type="primary" @click="createBtn('table')" :disabled="$disActionBtn || !resolvePermission('can create property')">新建属性</Button>
     </template>
 
     <template slot="table">
@@ -56,6 +56,7 @@ import {
   GET_PROPERTY_VALUES,
   DELETE_PROPERTY_VALUE
 } from "@/api/property-value";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: {
@@ -64,6 +65,8 @@ export default {
     PropertyCreateOrUpdateModal,
     PropertyValueCreateOrUpdateModal
   },
+
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -121,7 +124,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can update property")
                   },
                   on: {
                     click: () => {
@@ -137,7 +141,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can delete property")
                   }
                 },
                 "删除"

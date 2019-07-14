@@ -10,7 +10,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="createBtn()" :disabled="!resolvePermission('brand-create')">新增</Button>
+      <Button type="primary" @click="createBtn()" :disabled="!resolvePermission('can create brand')">新增</Button>
     </template>
 
     <template slot="table">
@@ -30,12 +30,12 @@ import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
 import CreateOrUpdateModal from "./CreateOrUpdateModal"
 import { GET_BRANDS, DELETE_BRAND } from "@/api/brand";
-import { permissionExist } from "@/mixins";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination, CreateOrUpdateModal },
 
-  mixins: [permissionExist],
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -83,7 +83,8 @@ export default {
             render: (h, params) => {
               const editBtn = h("Button", {
                 props: {
-                  type: "text"
+                  type: "text",
+                  disabled: !this.resolvePermission("can update brand")
                 },
                 on: {
                   click: () => {
@@ -97,7 +98,8 @@ export default {
 
               const removeBtn = h("Button", {
                 props: {
-                  type: "text"
+                  type: "text",
+                  disabled: !this.resolvePermission("can update brand")
                 },
               }, "删除");
 

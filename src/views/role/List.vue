@@ -13,7 +13,7 @@
     </template>
 
     <template slot="tool-left">
-      <Button type="primary" @click="$router.push({ name: 'role-create' })">新增</Button>
+      <Button type="primary" @click="resolveRoute({ name: 'role-create' }, 'can create role')">新增</Button>
     </template>
 
     <template slot="table">
@@ -30,9 +30,12 @@
 import LayoutList from "@/components/layout";
 import Pagination from "@/components/pagination";
 import { GET_ROLES, DELETE_ROLE } from "@/api/role";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutList, Pagination },
+
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -82,14 +85,15 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.$router.push({ name: "role-detail", query: { id: params.row.id }})
+                    this.resolveRoute({ name: "role-detail", query: { id: params.row.id } }, "can update role")
                   }
                 }
               }, "编辑");
 
               const removeBtn = h("Button", {
                 props: {
-                  type: "text"
+                  type: "text",
+                  disabled: !this.resolvePermission("can delete role")
                 },
               }, "删除");
 

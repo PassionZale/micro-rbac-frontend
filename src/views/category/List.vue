@@ -1,9 +1,9 @@
 <template>
   <layout-tree>
     <template slot="tree-tool">
-      <Button type="primary" @click="createBtn()">新建</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="updateBtn()">编辑</Button>
-      <Button type="primary" :disabled="$disActionBtn" @click="removeBtn()">删除</Button>
+      <Button type="primary" @click="createBtn()" :disabled="!resolvePermission('can create category')">新建</Button>
+      <Button type="primary" :disabled="$disActionBtn || !resolvePermission('can update category')" @click="updateBtn()">编辑</Button>
+      <Button type="primary" :disabled="$disActionBtn || !resolvePermission('can delete category')" @click="removeBtn()">删除</Button>
     </template>
 
     <template slot="tree">
@@ -44,9 +44,12 @@ import { LayoutTree } from "@/components/layout";
 import Pagination from "@/components/pagination";
 import CreateOrUpdateModal from "./components/CreateOrUpdateModal";
 import { GET_CATEGORIES_FORMAT, DELETE_CATEGORY, GET_CATEGORIES } from "@/api/category";
+import { permissionValidator } from "@/mixins";
 
 export default {
   components: { LayoutTree, Pagination, CreateOrUpdateModal },
+
+  mixins: [permissionValidator],
 
   data() {
     return {
@@ -108,7 +111,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.$router.push({ name: "category-detail", query: { id: params.row.id } })
+                      this.resolveRoute({ name: "category-detail", query: { id: params.row.id } }, "can update category")
                     }
                   }
                 },
@@ -119,7 +122,8 @@ export default {
                 "Button",
                 {
                   props: {
-                    type: "text"
+                    type: "text",
+                    disabled: !this.resolvePermission("can delete category")
                   }
                 },
                 "删除"
@@ -197,8 +201,8 @@ export default {
     },
 
     createChildBtn() {
-      const router = this.categoryId ? { name: "category-create", query: { parentId: this.categoryId} } : { name: "category-create"};
-      this.$router.push(router);
+      const route = this.categoryId ? { name: "category-create", query: { parentId: this.categoryId} } : { name: "category-create"};
+      this.resolveRoute(route, "can create category");
     },
 
     updateBtn() {
